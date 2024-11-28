@@ -83,15 +83,28 @@ const resetAnimation = () => {
   for(const track of getTracks()) resetTrackPosition(track);
 }
 
+// --- Nueva Función para Forzar Carga Sin Caché ---
+const forceNoCache = () => {
+  const scripts = document.querySelectorAll("script");
+  scripts.forEach(script => {
+    if (script.src) {
+      const noCacheSrc = `${script.src.split("?")[0]}?no_cache=${Date.now()}`;
+      const newScript = document.createElement("script");
+      newScript.src = noCacheSrc;
+      newScript.defer = script.defer;
+      script.replaceWith(newScript);
+    }
+  });
+};
+
 window.onload = () => {
   setup();
-  
-  setTimeout(animate);  
+  setTimeout(animate);
+  forceNoCache(); // Llama a la función después de la carga inicial
 };
 
 const handleRedo = () => {
   resetAnimation();
-  
   animate();
 }
 
