@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Squid Game Prize Counter</title>
@@ -7,6 +7,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css">
+  <style>
+    button {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #exitFullscreenButton {
+      left: auto;
+      right: 10px;
+    }
+  </style>
 </head>
 <body>
 <!-- partial:index.partial.html -->
@@ -27,11 +42,41 @@
     <i class="fa-regular fa-square"></i>
     <i class="fa-regular fa-triangle"></i>
   </div>
-  
-  
 </div>
+
+<!-- Botones para pantalla completa -->
+<button id="fullscreenButton" onclick="enterFullscreen()">Entrar en pantalla completa</button>
+<button id="exitFullscreenButton" onclick="exitFullscreen()">Salir de pantalla completa</button>
+
 <!-- partial -->
 <script src="./dani.js"></script>
-  
+<script>
+  // Función para entrar en pantalla completa
+  function enterFullscreen() {
+    const element = document.documentElement; // Toma todo el documento
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) { // Firefox
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) { // Chrome, Safari y Opera
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { // Edge/IE
+      element.msRequestFullscreen();
+    }
+  }
+
+  // Función para salir de pantalla completa
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari y Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // Edge/IE
+      document.msExitFullscreen();
+    }
+  }
+</script>
 </body>
 </html>
