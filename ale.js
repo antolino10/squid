@@ -1,121 +1,42 @@
-const MINIMUM_ADDITIONAL_ITERATION_COUNT = 2;
-
-const config = {  
-  additionalIterationCount: Math.max(MINIMUM_ADDITIONAL_ITERATION_COUNT, 3),
-  transitionDuration: 3000,
-  prize: 20000,
-  digits: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-}
-
-const USD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "KRW",
-  maximumFractionDigits: 0
-});
-
-const getPrizeText = () => document.getElementById("prize-text"),
-      getTracks = () => document.querySelectorAll(".digit > .digit-track");
-
-const getFormattedPrize = () => USD.format(config.prize),
-      getPrizeDigitByIndex = index => parseInt(config.prize.toString()[index]),
-      determineIterations = index => index + config.additionalIterationCount;
-
-const createElement = (type, className, text) => {
-  const element = document.createElement(type);
-  element.className = className;
-  if(text !== undefined) element.innerText = text;
-  return element;
-}
-
-const createCharacter = character => createElement("span", "character", character);
-
-const createDigit = (digit, trackIndex) => {
-  const digitElement = createElement("span", "digit"),
-        trackElement = createElement("span", "digit-track");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Squid Game Prize Counter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="app">
+  <div id="prize">
+    <div id="prize-lines" class="prize-filter"></div>
+    <div id="prize-shadow" class="prize-filter"></div>
+    <h2 id="prize-label">
+      <span class="asterisk">*</span>
+      <span>BALANCE ALE</span>
+      <span class="asterisk">*</span>      
+    </h2>
+    <h1 id="prize-text"></h1>
+  </div>
   
-  let digits = [],
-      iterations = determineIterations(trackIndex);
+  <div id="shapes">
+    <i class="fa-regular fa-circle"></i>
+    <i class="fa-regular fa-square"></i>
+    <i class="fa-regular fa-triangle"></i>
+  </div>
   
-  for(let i = 0; i < iterations; i++) {
-    digits = [...digits, ...config.digits];
-  }
-  
-  trackElement.innerText = digits.join(" ");
-  
-  trackElement.style.transitionDuration = `${config.transitionDuration}ms`;
-  
-  digitElement.appendChild(trackElement);
-  
-  return digitElement;
-}
+</div>
+<!-- partial -->
+<script>
+  // Añadimos un timestamp dinámico a la URL del script para evitar la caché
+  const script = document.createElement('script');
+  script.src = `./ale.js?v=${Date.now()}`;
+  script.defer = true;
+  document.body.appendChild(script);
+</script>
 
-const setup = () => {
-  let index = 0;
-  
-  const prizeText = getPrizeText();
-  
-  for(const character of getFormattedPrize()) {
-    const element = isNaN(character) 
-      ? createCharacter(character) : createDigit(character, index++);
-    
-    prizeText.appendChild(element);
-  }  
-}
-
-const animate = () => {
-  getTracks().forEach((track, index) => {
-    const digit = getPrizeDigitByIndex(index),
-          iterations = determineIterations(index),
-          activeDigit = ((iterations - 1) * 10) + digit;
-    
-    track.style.translate = `0rem ${activeDigit * -10}rem`;
-  });
-}
-
-const resetTrackPosition = track => {
-  track.style.transitionDuration = "0ms";
-  track.style.translate = "0rem 0rem";
-  track.offsetHeight;
-  track.style.transitionDuration = `${config.transitionDuration}ms`;
-}
-
-const resetAnimation = () => {
-  for(const track of getTracks()) resetTrackPosition(track);
-}
-
-// --- Nueva Función para Forzar Carga Sin Caché ---
-const forceNoCache = () => {
-  const scripts = document.querySelectorAll("script");
-  scripts.forEach(script => {
-    if (script.src) {
-      const noCacheSrc = `${script.src.split("?")[0]}?no_cache=${Date.now()}`;
-      const newScript = document.createElement("script");
-      newScript.src = noCacheSrc;
-      newScript.defer = script.defer;
-      script.replaceWith(newScript);
-    }
-  });
-};
-
-window.onload = () => {
-  setup();
-  setTimeout(animate);
-  forceNoCache(); // Llama a la función después de la carga inicial
-};
-
-const handleRedo = () => {
-  resetAnimation();
-  animate();
-}
-
-const updateTheme = theme => {
-  document.documentElement.style.setProperty("--theme-rgb", `var(--${theme})`);
-  
-  for(const button of document.querySelectorAll(".theme-button")) {
-    button.dataset.selected = theme === button.dataset.theme;
-  }
-}
-
-const handleChangeTheme = e => updateTheme(e.currentTarget.dataset.theme);
-
-updateTheme("green");
+</body>
+</html>
