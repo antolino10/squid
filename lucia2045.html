@@ -28,10 +28,15 @@
     <i class="fa-regular fa-triangle"></i>
   </div>
   
-  
 </div>
 <!-- partial -->
-<script src="./lucia.js"></script>
+<script>
+  // Añadimos un timestamp dinámico a la URL del script para evitar la caché
+  const script = document.createElement('script');
+  script.src = `./lucia.js?v=${Date.now()}`;
+  script.defer = true;
+  document.body.appendChild(script);
+</script>
 
 </body>
 </html>
