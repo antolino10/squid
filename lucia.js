@@ -3,7 +3,7 @@ const MINIMUM_ADDITIONAL_ITERATION_COUNT = 2;
 const config = {  
   additionalIterationCount: Math.max(MINIMUM_ADDITIONAL_ITERATION_COUNT, 3),
   transitionDuration: 3000,
-  prize: 145000,
+  prize: 285000,
   digits: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
 
